@@ -1,9 +1,9 @@
+from time import time, sleep
+import yaml
+from uuid import uuid4
 import chromadb
 from chromadb.config import Settings
 import openai
-import yaml
-from time import time, sleep
-from uuid import uuid4
 
 
 def save_yaml(filepath, data):
@@ -32,11 +32,12 @@ def chatbot(messages, model="gpt-4", temperature=0):
             ###    trim message object
             debug_object = [i['content'] for i in messages]
             debug_object.append(text)
-            save_yaml('api_logs/convo_%s.yaml' % time(), debug_object)
+            save_yaml(f'api_logs/convo_{time()}.yaml', debug_object)
             if response['usage']['total_tokens'] >= 7000:
                 a = messages.pop(1)
             
             return text
+
         except Exception as oops:
             print(f'\n\nError communicating with OpenAI: "{oops}"')
             if 'maximum context length' in str(oops):
